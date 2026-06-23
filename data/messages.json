@@ -1,0 +1,28 @@
+{
+  "startup": [
+    "Systems online.",
+    "Operator detected.",
+    "Good evening, Jon.",
+    "Astromech core initialized.",
+    "Checking local network...",
+    "Coffee reserves unknown.",
+    "Recommendation: Check DNS.",
+    "Camtono credits unavailable."
+  ],
+
+  "status": [
+    "All systems nominal.",
+    "No bounty activity detected.",
+    "Pi-hole appears content.",
+    "Network seems suspiciously quiet.",
+    "Temu activity not detected... yet.",
+    "OPNsense has not exploded."
+  ],
+
+  "warnings": [
+    "Wallet integrity decreasing.",
+    "Amazon package inbound.",
+    "Filament reserves acceptable.",
+    "Operator is considering another Raspberry Pi."
+  ]
+}
