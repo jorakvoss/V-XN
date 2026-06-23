@@ -37,6 +37,7 @@ with open(message_file, "r") as f:
 startup = data["startup"]
 status = data["status"]
 warnings = data["warnings"]
+observations = data["observations"]
 
 TERM_HEIGHT = os.get_terminal_size().lines
 TOP_PADDING = max(0, (TERM_HEIGHT - BLOCK_HEIGHT) //2)
@@ -96,15 +97,18 @@ while True:
     title = random.choice([
     "STARTUP",
     "STATUS",
-    "WARNING"
+    "WARNING",
+    "OBSERVATION"
 ])
 
     if title == "STARTUP":
         message = random.choice(startup)
     elif title == "STATUS":
         message = random.choice(status)
-    else:
+    elif title == "WARNING":
         message = random.choice(warnings)
+    else:
+        message = random.choice(observations)
 
     divider = "=" * DISPLAY_WIDTH
 
