@@ -10,6 +10,14 @@ DISPLAY_WIDTH = 60
 BLOCK_HEIGHT = 9
 TERM_WIDTH = os.get_terminal_size().columns
 
+EYE_PATTERNS = [
+    "[o   o]",
+    "[o   O]",
+    "[-   -]",
+    "[*   *]",
+    "[+   +]"
+]
+
 message_file = Path("data/messages.json")
 
 with open(message_file, "r") as f:
@@ -25,6 +33,7 @@ TOP_PADDING = max(0, (TERM_HEIGHT - BLOCK_HEIGHT) //2)
 while True:
 
     os.system("clear")
+    EYES = random.choice(EYE_PATTERNS)
 
     for _ in range(TOP_PADDING):
         print()
@@ -45,6 +54,8 @@ while True:
     divider = "=" * DISPLAY_WIDTH
 
     print(divider.center(TERM_WIDTH))
+    print()
+    print(EYES.center(DISPLAY_WIDTH).center(TERM_WIDTH))
     print()
     print("V-XN ASTROMECH".center(DISPLAY_WIDTH).center(TERM_WIDTH))
     print()
