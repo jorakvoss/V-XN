@@ -3,21 +3,34 @@
 import os
 import random
 import time
+import json
+from pathlib import Path
 
-messages = [
-    ("NETWORK", "ALL SYSTEMS NOMINAL"),
-    ("COFFEE", "REFILL RECOMMENDED"),
-    ("CAMTONO", "CREDITS LOW"),
-    ("TEMU", "WALLET IN DANGER"),
-    ("PRINTER", "DO NOT TOUCH"),
-    ("STATUS", "CHECK DNS"),
-]
+message_file = Path("data/messages.json")
+
+with open(message_file, "r") as f:
+    data = json.load(f)
+
+startup = data["startup"]
+status = data["status"]
+warnings = data["warnings"]
 
 while True:
 
     os.system("clear")
 
-    title, message = random.choice(messages)
+    title = random.choice([
+    "STARTUP",
+    "STATUS",
+    "WARNING"
+])
+
+    if title == "STARTUP":
+        message = random.choice(startup)
+    elif title == "STATUS":
+        message = random.choice(status)
+    else:
+        message = random.choice(warnings)
 
     print("=" * 40)
     print()
@@ -31,4 +44,4 @@ while True:
     print()
     print("=" * 40)
 
-    time.sleep(5)
+    time.sleep(10)
