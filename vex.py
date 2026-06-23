@@ -6,7 +6,9 @@ import time
 import json
 from pathlib import Path
 
-WIDTH = 60
+DISPLAY_WIDTH = 60
+BLOCK_HEIGHT = 9
+TERM_WIDTH = os.get_terminal_size().columns
 
 message_file = Path("data/messages.json")
 
@@ -17,9 +19,15 @@ startup = data["startup"]
 status = data["status"]
 warnings = data["warnings"]
 
+TERM_HEIGHT = os.get_terminal_size().lines
+TOP_PADDING = max(0, (TERM_HEIGHT - BLOCK_HEIGHT) //2)
+
 while True:
 
     os.system("clear")
+
+    for _ in range(TOP_PADDING):
+        print()
 
     title = random.choice([
     "STARTUP",
@@ -34,16 +42,18 @@ while True:
     else:
         message = random.choice(warnings)
 
-    print("=" * WIDTH)
+    divider = "=" * DISPLAY_WIDTH
+
+    print(divider.center(TERM_WIDTH))
     print()
-    print("V-XN ASTROMECH".center(WIDTH))
+    print("V-XN ASTROMECH".center(DISPLAY_WIDTH).center(TERM_WIDTH))
     print()
-    print("=" * WIDTH)
+    print(divider.center(TERM_WIDTH))
     print()
-    print(title.center(WIDTH))
+    print(title.center(DISPLAY_WIDTH).center(TERM_WIDTH))
     print()
-    print(message.center(WIDTH))
+    print(message.center(DISPLAY_WIDTH).center(TERM_WIDTH))
     print()
-    print("=" * WIDTH)
+    print(divider.center(TERM_WIDTH))
 
     time.sleep(10)
