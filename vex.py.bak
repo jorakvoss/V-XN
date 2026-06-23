@@ -6,8 +6,6 @@ import time
 import json
 from pathlib import Path
 
-WIDTH = 60
-
 message_file = Path("data/messages.json")
 
 with open(message_file, "r") as f:
@@ -34,16 +32,16 @@ while True:
     else:
         message = random.choice(warnings)
 
-    print("=" * WIDTH)
+    print("=" * 40)
     print()
-    print("V-XN ASTROMECH".center(WIDTH))
+    print("            V-XN ASTROMECH")
     print()
-    print("=" * WIDTH)
+    print("=" * 40)
     print()
-    print(title.center(WIDTH))
+    print(f"  {title}")
     print()
-    print(message.center(WIDTH))
+    print(f"  {message}")
     print()
-    print("=" * WIDTH)
+    print("=" * 40)
 
     time.sleep(10)
