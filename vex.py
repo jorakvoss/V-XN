@@ -15,7 +15,9 @@ EYE_PATTERNS = [
     "[o   O]",
     "[-   -]",
     "[*   *]",
-    "[+   +]"
+    "[+   +]",
+    "[O - O]",
+    "[D - D]"
 ]
 
 LOADING_MESSAGES = [
@@ -42,6 +44,10 @@ TOP_PADDING = max(0, (TERM_HEIGHT - BLOCK_HEIGHT) //2)
 def print_centered(line=""):
     print(line.center(DISPLAY_WIDTH).center(TERM_WIDTH))
 
+def print_screen(lines):
+    for line in lines:
+        print_centered(line)
+
 def clear_screen():
     print("\033[H\033[2J\033[3J", end="", flush=True)
 
@@ -57,19 +63,23 @@ def show_loading_screen():
 
         eyes = random.choice(EYE_PATTERNS)
 
-        print_centered(divider)
-        print()
-        print_centered(eyes)
-        print()
-        print_centered("V-XN ASTROMECH")
-        print()
-        print_centered(divider)
-        print()
-        print_centered("INITIALIZING")
-        print()
-        print_centered(loading_message)
-        print()
-        print_centered(divider)
+        loading_screen = [
+            divider,
+            "",
+            eyes,
+            "",
+            "V-XN ASTROMECH",
+            "",
+            divider,
+            "",
+            "INITIALIZING",
+            "",
+            loading_message,
+            "",
+            divider
+        ]
+
+        print_screen(loading_screen)
 
         time.sleep(1)
 
@@ -98,18 +108,22 @@ while True:
 
     divider = "=" * DISPLAY_WIDTH
 
-    print(divider.center(TERM_WIDTH))
-    print()
-    print(EYES.center(DISPLAY_WIDTH).center(TERM_WIDTH))
-    print()
-    print("V-XN ASTROMECH".center(DISPLAY_WIDTH).center(TERM_WIDTH))
-    print()
-    print(divider.center(TERM_WIDTH))
-    print()
-    print(title.center(DISPLAY_WIDTH).center(TERM_WIDTH))
-    print()
-    print(message.center(DISPLAY_WIDTH).center(TERM_WIDTH))
-    print()
-    print(divider.center(TERM_WIDTH))
+    main_screen = [
+        divider,
+        "",
+        EYES,
+        "",
+        "V-XN ASTROMECH",
+        "",
+        divider,
+        "",
+        title,
+        "",
+        message,
+        "",
+        divider
+]
+
+    print_screen(main_screen)
 
     time.sleep(10)
