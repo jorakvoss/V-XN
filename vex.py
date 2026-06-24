@@ -5,6 +5,7 @@ import random
 import time
 import json
 from pathlib import Path
+from datetime import datetime
 
 DISPLAY_WIDTH = 60
 BLOCK_HEIGHT = 9
@@ -21,7 +22,9 @@ EYE_PATTERNS = [
     "[$ - $]",
     "[^ - ^]",
     "[< - >]",
-    "[~ - ~]"
+    "[~ - ~]",
+    "[> - >]",
+    "[< - <]"
 ]
 
 LOADING_MESSAGES = [
@@ -42,12 +45,13 @@ startup = data["startup"]
 status = data["status"]
 warnings = data["warnings"]
 observations = data["observations"]
+latenight = data["latenight"]
 
 TERM_HEIGHT = os.get_terminal_size().lines
 TOP_PADDING = max(0, (TERM_HEIGHT - BLOCK_HEIGHT) //2)
 
 def print_centered(line=""):
-    print(line.center(DISPLAY_WIDTH).center(TERM_WIDTH))
+    print(line.center(DISPLAY_WIDTH).center(TERM_WIDTH), flush=True)
 
 def print_screen(lines):
     for line in lines:
@@ -92,25 +96,33 @@ show_loading_screen()
 
 while True:
 
-    os.system("clear")
+    clear_screen()
     EYES = random.choice(EYE_PATTERNS)
 
     for _ in range(TOP_PADDING):
         print()
 
-    title = random.choice([
+    titles = [
     "STARTUP",
     "STATUS",
     "WARNING",
     "OBSERVATION"
-])
+    ]
 
+    current_hour = datetime.now().hour
+
+    if current_hour >=23 or current_hour <5:
+        titles.append("LATENIGHT")
+
+    title = random.choice(titles)
     if title == "STARTUP":
         message = random.choice(startup)
     elif title == "STATUS":
         message = random.choice(status)
     elif title == "WARNING":
         message = random.choice(warnings)
+    elif title == "LATENIGHT":
+        message = random.choice(latenight)
     else:
         message = random.choice(observations)
 
@@ -130,7 +142,7 @@ while True:
         message,
         "",
         divider
-]
+    ]
 
     print_screen(main_screen)
 

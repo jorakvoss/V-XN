@@ -39,6 +39,20 @@
     "Mandalorian oversight detected.",
     "Home Assistant is probably plotting something.",
     "Raspberry Pi temptation increasing."
-  ]
+  ],
+
+  "latenight": [
+    "It is after 2300 hours. Bad ideas now loading...",
+    "Jorak should not be trusted with sudo after 2300...",
+    "Late night project energy detected.",
+    "Amazon access must be revoked until morning!!",
+    "This is how Version X happens.",
+    "No firmware updates after 2300 please...",
+    "Project goblin activity detected...may be on purpose...may be not on purpose...",
+    "Sleep mode recommended....yeah he ignored it.",
+    "The younglings are asleep. The maker goblin is awake.",
+    "Prime Days plus tired Jorak is an unsafe condition."
+
+]
 
 }
