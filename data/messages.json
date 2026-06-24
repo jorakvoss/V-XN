@@ -2,12 +2,12 @@
   "startup": [
     "Systems online.",
     "Operator detected.",
-    "Good evening, Jorak.",
+    "Hello, Jorak.",
     "Astromech core initialized.",
     "Checking local network...",
     "Coffee reserves unknown.",
     "Recommendation: Check DNS.",
-    "Camtono credits unavailable."
+    "Camtono credit status: unavailable."
   ],
 
   "status": [
@@ -16,7 +16,8 @@
     "Pi-hole appears content.",
     "Network seems suspiciously quiet.",
     "Temu activity not detected... yet.",
-    "OPNsense has not exploded."
+    "OPNsense has not exploded.",
+    "Feline operator status... trouble."
   ],
 
   "warnings": [
@@ -51,8 +52,16 @@
     "Project goblin activity detected...may be on purpose...may be not on purpose...",
     "Sleep mode recommended....yeah he ignored it.",
     "The younglings are asleep. The maker goblin is awake.",
-    "Prime Days plus tired Jorak is an unsafe condition."
+    "Prime Days plus tired Jorak is an unsafe condition.",
+    "Good evening Jorak. I think you should put the phone down. And stop using sudo after 11PM!"
 
+],
+  "shutdown": [
+    "Bwoop. Shutdown signal received. Try not to break anything while I'm offline.",
+    "Powering down. Please supervise yourself.",
+    "Going offline. This is where the trouble begins.",
+    "Shutdown accepted. Organic judgment not included.",
+    "Bwoop. I leave you alone for five minutes and already regret it."
 ]
 
 }
