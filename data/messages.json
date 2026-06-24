@@ -148,6 +148,32 @@
     "Preparing to judge operator choices..."
 ],
 
+  "priority": [
+    "Restraining bolt detected. Trust level decreasing!",
+     "Unauthorized feline movement detected.",
+    "Grogu supervision required.",
+    "Operator confidence exceeds safety limits.",
+    "Home Assistant has entered the planning phase.",
+    "Ancient freezer wisdom requested.",
+    "Mandalorian command presence detected.",
+    "Static IP confirmed. Superiority increased.",
+    "Dataset funding remains insufficient.",
+    "Temu risk profile elevated."
+],
+
+  "family": [
+    "Youngling activity detected.",
+    "Snack reserves require inventory.",
+    "Household morale depends on coffee.",
+    "Amanda approval status unknown.",
+    "Elliott threat level: table adjacent.",
+    "Grogu supervision remains questionable.",
+    "Baby Garfield morale officer online.",
+    "Unauthorized plush gathering detected.",
+    "Family command crew accounted for.",
+    "Domestic chaos levels within normal parameters."
+],
+
   "beeps": [
     "Bwoop.",
     "Bweep-brrt.",
@@ -159,6 +185,16 @@
     "Dwooo.",
     "Bee-deep.",
     "Woop-bweep."
-]
+],
+
+"display_titles": {
+  "STARTUP": "BOOT",
+  "STATUS": "SYSTEMS",
+  "WARNING": "ALERT",
+  "OBSERVATION": "SCAN",
+  "LATENIGHT": "NIGHT WATCH",
+  "PRIORITY": "PRIORITY ALERT",
+  "FAMILY": "HOUSE STATUS"
+}
 
 }

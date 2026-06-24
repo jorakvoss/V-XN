@@ -43,14 +43,10 @@ latenight = data["latenight"]
 shutdown = data["shutdown"]
 loading = data["loading"]
 beeps = data["beeps"]
+priority = data["priority"]
+family = data["family"]
 
-DISPLAY_TITLES = {
-    "STARTUP": "BOOT",
-    "STATUS": "SYSTEMS",
-    "WARNING": "ALERT",
-    "OBSERVATION": "SCAN",
-    "LATENIGHT": "NIGHT WATCH"
-}
+DISPLAY_TITLES = data["display_titles"]
 
 TERM_HEIGHT = os.get_terminal_size().lines
 
@@ -124,7 +120,8 @@ while True:
     "STARTUP",
     "STATUS",
     "WARNING",
-    "OBSERVATION"
+    "OBSERVATION",
+    "FAMILY"
     ]
 
     current_hour = datetime.now().hour
@@ -133,18 +130,24 @@ while True:
         titles.append("LATENIGHT")
 
     for _ in range(5):
-        title = random.choice(titles)
-
-        if title == "STARTUP":
-            message = random.choice(startup)
-        elif title == "STATUS":
-            message = random.choice(status)
-        elif title == "WARNING":
-            message = random.choice(warnings)
-        elif title == "LATENIGHT":
-            message = random.choice(latenight)
+        if random.randint(1, 10) == 1:
+            title = "PRIORITY"
+            message = random.choice(priority)
         else:
-            message = random.choice(observations)
+            title = random.choice(titles)
+
+            if title == "STARTUP":
+                message = random.choice(startup)
+            elif title == "STATUS":
+                message = random.choice(status)
+            elif title == "WARNING":
+                message = random.choice(warnings)
+            elif title == "LATENIGHT":
+                message = random.choice(latenight)
+            elif title == "FAMILY":
+                message = random.choice(family)
+            else:
+                message = random.choice(observations)
 
         if title != last_title or message != last_message:
             break
@@ -188,4 +191,4 @@ while True:
 
     print_screen(main_screen)
 
-    time.sleep(10)
+    time.sleep(25)
