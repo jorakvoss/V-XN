@@ -48,8 +48,6 @@ family = data["family"]
 
 DISPLAY_TITLES = data["display_titles"]
 
-TERM_HEIGHT = os.get_terminal_size().lines
-
 def print_centered(line=""):
     print(line.center(DISPLAY_WIDTH).center(TERM_WIDTH), flush=True)
 
@@ -162,7 +160,7 @@ while True:
     uptime_seconds = int(time.time() - START_TIME)
     uptime = time.strftime("%H:%M:%S", time.gmtime(uptime_seconds))
 
-    messages_lines = wrap(message, width=DISPLAY_WIDTH - 4)
+    message_lines = wrap(message, width=DISPLAY_WIDTH - 4)
     display_title = DISPLAY_TITLES.get(title, title)
 
     main_screen = [
@@ -181,7 +179,7 @@ while True:
         "",
         display_title,
         "",
-        message,
+        *message_lines,
         "",
         divider,
         "",
