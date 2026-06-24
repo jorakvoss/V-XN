@@ -62,6 +62,19 @@
     "Going offline. This is where the trouble begins.",
     "Shutdown accepted. Organic judgment not included.",
     "Bwoop. I leave you alone for five minutes and already regret it."
+],
+
+  "loading": [
+    "Initializing systems...",
+    "Loading personality matrix...",
+    "Calibrating sarcasm...",
+    "Checking coffee reserves...",
+    "Scanning local network...",
+    "Synchronizing temporal awareness...",
+    "Checking static IP confidence...",
+    "Reminding DHCP to stay away...",
+    "Warming sarcasm coils...",
+    "Boot sequence complete."
 ]
 
 }

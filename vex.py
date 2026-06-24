@@ -31,19 +31,6 @@ EYE_PATTERNS = [
     "[< - <]"
 ]
 
-LOADING_MESSAGES = [
-    "Initializing systems...",
-    "Loading personality matrix...",
-    "Calibrating sarcasm...",
-    "Checking coffee reserves...",
-    "Scanning local network...",
-    "Synchronizing temporal awareness...",
-    "Checking static IP confidence...",
-    "Reminding DHCP to stay away...",
-    "Warming sarcasm coils...",
-    "Boot sequence complete."
-]
-
 message_file = Path("data/messages.json")
 
 with open(message_file, "r") as f:
@@ -55,6 +42,7 @@ warnings = data["warnings"]
 observations = data["observations"]
 latenight = data["latenight"]
 shutdown = data["shutdown"]
+loading = data["loading"]
 
 TERM_HEIGHT = os.get_terminal_size().lines
 TOP_PADDING = max(0, (TERM_HEIGHT - BLOCK_HEIGHT) //2)
@@ -83,7 +71,7 @@ print("\033[?25l", end="", flush=True)
 
 def show_loading_screen():
     divider = "=" * DISPLAY_WIDTH
-    for loading_message in LOADING_MESSAGES:
+    for loading_message in loading:
         clear_screen()
     
         for _ in range(TOP_PADDING):
