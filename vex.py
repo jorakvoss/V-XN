@@ -11,7 +11,6 @@ from datetime import datetime
 from textwrap import wrap
 
 DISPLAY_WIDTH = 60
-BLOCK_HEIGHT = 9
 TERM_WIDTH = os.get_terminal_size().columns
 START_TIME = time.time()
 
@@ -31,6 +30,16 @@ EYE_PATTERNS = [
     "[< - <]"
 ]
 
+BEEP_PATTERNS = [
+    "Bwoop.",
+    "Bweep-brrt.",
+    "Dwee-oo.",
+    "Wrrp?",
+    "Bwoop-dah-doop!",
+    "Tweep!",
+    "Brrt..",
+]
+
 message_file = Path("data/messages.json")
 
 with open(message_file, "r") as f:
@@ -44,13 +53,26 @@ latenight = data["latenight"]
 shutdown = data["shutdown"]
 loading = data["loading"]
 
+DISPLAY_TITLES = {
+    "STARTUP": "BOOT",
+    "STATUS": "SYSTEMS",
+    "WARNING": "ALERT",
+    "OBSERVATION": "SCAN",
+    "LATENIGHT": "NIGHT WATCH"
+}
+
 TERM_HEIGHT = os.get_terminal_size().lines
-TOP_PADDING = max(0, (TERM_HEIGHT - BLOCK_HEIGHT) //2)
 
 def print_centered(line=""):
     print(line.center(DISPLAY_WIDTH).center(TERM_WIDTH), flush=True)
 
 def print_screen(lines):
+    term_height = os.get_terminal_size().lines
+    top_padding = max(0, (term_height - len(lines)) //2)
+
+    for _ in range(top_padding):
+        print()
+
     for line in lines:
         print_centered(line)
 
@@ -73,9 +95,6 @@ def show_loading_screen():
     divider = "=" * DISPLAY_WIDTH
     for loading_message in loading:
         clear_screen()
-    
-        for _ in range(TOP_PADDING):
-            print()
 
         eyes = random.choice(EYE_PATTERNS)
 
@@ -105,9 +124,7 @@ while True:
 
     clear_screen()
     EYES = random.choice(EYE_PATTERNS)
-
-    for _ in range(TOP_PADDING):
-        print()
+    BEEP = random.choice(BEEP_PATTERNS)
 
     titles = [
     "STARTUP",
@@ -141,19 +158,24 @@ while True:
     uptime = time.strftime("%H:%M:%S", time.gmtime(uptime_seconds))
 
     messages_lines = wrap(message, width=DISPLAY_WIDTH - 4)
+    display_title = DISPLAY_TITLES.get(title, title)
 
     main_screen = [
         divider,
         "",
         EYES,
         "",
-        "V-XN ASTROMECH",
+        BEEP,
+        "",
+        'V-XN "VEX" ASTROMECH',
+        "COMMAND NODE // LOCAL",
+        "",
         current_time,
         current_date,
         "",
         divider,
         "",
-        title,
+        display_title,
         "",
         message,
         "",
