@@ -30,16 +30,6 @@ EYE_PATTERNS = [
     "[< - <]"
 ]
 
-BEEP_PATTERNS = [
-    "Bwoop.",
-    "Bweep-brrt.",
-    "Dwee-oo.",
-    "Wrrp?",
-    "Bwoop-dah-doop!",
-    "Tweep!",
-    "Brrt..",
-]
-
 message_file = Path("data/messages.json")
 
 with open(message_file, "r") as f:
@@ -52,6 +42,7 @@ observations = data["observations"]
 latenight = data["latenight"]
 shutdown = data["shutdown"]
 loading = data["loading"]
+beeps = data["beeps"]
 
 DISPLAY_TITLES = {
     "STARTUP": "BOOT",
@@ -120,11 +111,14 @@ def show_loading_screen():
 
 show_loading_screen()
 
+last_title = None
+last_message = None
+
 while True:
 
     clear_screen()
     EYES = random.choice(EYE_PATTERNS)
-    BEEP = random.choice(BEEP_PATTERNS)
+    BEEP = random.choice(beeps)
 
     titles = [
     "STARTUP",
@@ -138,17 +132,25 @@ while True:
     if current_hour >=23 or current_hour <5:
         titles.append("LATENIGHT")
 
-    title = random.choice(titles)
-    if title == "STARTUP":
-        message = random.choice(startup)
-    elif title == "STATUS":
-        message = random.choice(status)
-    elif title == "WARNING":
-        message = random.choice(warnings)
-    elif title == "LATENIGHT":
-        message = random.choice(latenight)
-    else:
-        message = random.choice(observations)
+    for _ in range(5):
+        title = random.choice(titles)
+
+        if title == "STARTUP":
+            message = random.choice(startup)
+        elif title == "STATUS":
+            message = random.choice(status)
+        elif title == "WARNING":
+            message = random.choice(warnings)
+        elif title == "LATENIGHT":
+            message = random.choice(latenight)
+        else:
+            message = random.choice(observations)
+
+        if title != last_title or message != last_message:
+            break
+
+    last_title = title
+    last_message = message
 
     divider = "=" * DISPLAY_WIDTH
 
@@ -164,7 +166,6 @@ while True:
         divider,
         "",
         EYES,
-        "",
         BEEP,
         "",
         'V-XN "VEX" ASTROMECH',

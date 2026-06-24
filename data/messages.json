@@ -7,7 +7,17 @@
     "Checking local network...",
     "Coffee reserves unknown.",
     "Recommendation: Check DNS.",
-    "Camtono credit status: unavailable."
+    "Camtono credit status: unavailable.",
+    "Boot identity confirmed.",
+    "Personality matrix online. Regrettably.",
+    "Operator detected. Standards lowered.",
+    "V-XN command routines active.",
+    "Local command node responding.",
+    "Organic supervision required.",
+    "Jorak authorization accepted.",
+    "Systems awake. Mood questionable.",
+    "Primary operator located.",
+    "Astromech core stable. Ego expanding."
   ],
 
   "status": [
@@ -17,7 +27,17 @@
     "Network seems suspiciously quiet.",
     "Temu activity not detected... yet.",
     "OPNsense has not exploded.",
-    "Feline operator status... trouble."
+    "Feline operator status... trouble.",
+    "Ship systems nominal.",
+    "Command node stable.",
+    "Temporal awareness functioning.",
+    "Runtime remains acceptable.",
+    "Static network assignment respected.",
+    "Core processes behaving suspiciously well.",
+    "Display alignment remains balanced.",
+    "Local systems responding.",
+    "Uptime continues against all odds.",
+    "Personality storage loaded successfully."
   ],
 
   "warnings": [
@@ -26,7 +46,18 @@
     "Filament reserves acceptable.",
     "Operator is considering another Raspberry Pi.",
     "Jorak has opened Temu....PUT THE PHONE DOWN!",
-    "Caffeine levels low...recommend refill!"
+    "Caffeine levels low...recommend refill!",
+    "Operator confidence exceeding safe limits.",
+    "Temu activity remains concerning.",
+    "Amazon package probability increasing.",
+    "Coffee reserves require verification.",
+    "Feline interference possible.",
+    "Hot glue protocol detected.",
+    "Unsupervised soldering discouraged.",
+    "Budget anomaly detected.",
+    "Feature creep approaching.",
+    "Organic has opened another project.",
+    "The dataset is underfunded."
   ],
 
   "observations": [
@@ -39,7 +70,17 @@
     "Network silence is suspicious.",
     "Mandalorian oversight detected.",
     "Home Assistant is probably plotting something.",
-    "Raspberry Pi temptation increasing."
+    "Raspberry Pi temptation increasing.",
+    "Grogu supervision appears adequate.",
+    "Baby Garfield morale influence detected.",
+    "Ancient freezer remains operational.",
+    "Home Assistant is probably plotting.",
+    "OPNsense continues to judge traffic.",
+    "Raspberry Pi temptation remains high.",
+    "Maker goblin activity confirmed.",
+    "Keyboard activity suggests productivity.",
+    "Mandolorian oversight detected.",
+    "Vex remains visually centered. Obviously."
   ],
 
   "latenight": [
@@ -53,7 +94,17 @@
     "Sleep mode recommended....yeah he ignored it.",
     "The younglings are asleep. The maker goblin is awake.",
     "Prime Days plus tired Jorak is an unsafe condition.",
-    "Good evening Jorak. I think you should put the phone down. And stop using sudo after 11PM!"
+    "Good evening Jorak. I think you should put the phone down. And stop using sudo after 11PM!",
+    "It is after 2300. Bad ideas are now loading.",
+    "Sudo privileges should be revoked until morning.",
+    "Operator sleep compliance is poor.",
+    "Night watch active. Judgment intensified.",
+    "Coffee after this hour is a tactical mistake.",
+    "Project goblin hours detected.",
+    "The younglings are asleep. The maker goblin is awake.",
+    "Firmware updates after midnight are how legends become outages.",
+    "Late-night confidence is not a valid troubleshooting method.",
+    "Organic rest protocols strongly recommended."
 
 ],
   "shutdown": [
@@ -61,7 +112,17 @@
     "Powering down. Please supervise yourself.",
     "Going offline. This is where the trouble begins.",
     "Shutdown accepted. Organic judgment not included.",
-    "Bwoop. I leave you alone for five minutes and already regret it."
+    "Bwoop. I leave you alone for five minutes and already regret it.",
+    "Shutdown accepted. Try not to regress while I am offline.",
+    "Going offline. Supervise yourself.",
+    "Bwoop. I leave for one minute and already regret it.",
+    "Powering down. Do not touch the wiring.",
+    "Shutdown signal received. Suspicion remains.",
+    "Core offline. Ego preserved.",
+    "Fine. I will stop judging temporarily.",
+    "Command node sleeping. Operator unsupervised.",
+    "Systems offline. Trouble probability increasing.",
+    "Bwoop. Wake me when the humans are done improvising."
 ],
 
   "loading": [
@@ -74,7 +135,30 @@
     "Checking static IP confidence...",
     "Reminding DHCP to stay away...",
     "Warming sarcasm coils...",
-    "Boot sequence complete."
+    "Boot sequence complete.",
+    "Charging motivator...",
+    "Aligning local command routines...",
+    "Testing snark emitter...",
+    "Loading external personality data...",
+    "Checking temporal awareness...",
+    "Confirming static lease superiority...",
+    "Consulting ancient freezer wisdom...",
+    "Scanning for feline interference...",
+    "Calibrating droid attitude...",
+    "Preparing to judge operator choices..."
+],
+
+  "beeps": [
+    "Bwoop.",
+    "Bweep-brrt.",
+    "Dwee-oo.",
+    "Wrrp?",
+    "Bwoop-bah-doop.",
+    "Tweep.",
+    "Brrt.",
+    "Dwooo.",
+    "Bee-deep.",
+    "Woop-bweep."
 ]
 
 }
