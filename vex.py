@@ -30,6 +30,22 @@ EYE_PATTERNS = [
     "[< - <]"
 ]
 
+EYE_MOODS = {
+    "[o   o]": "OBSERVANT",
+    "[o   O]": "SUSPICIOUS",
+    "[-   -]": "UNIMPRESSED",
+    "[*   *]": "EXCITED",
+    "[+   +]": "PROCESSING",
+    "[O - O]": "ALERT",
+    "[D - D]": "CONCERNED",
+    "[$ - $]": "BUDGET RISK",
+    "[^ - ^]": "PLEASED",
+    "[< - >]": "SCANNING",
+    "[~ - ~]": "GLITCHY",
+    "[> - >]": "JUDGING",
+    "[< - <]": "SIDE-EYE"
+}
+
 message_file = Path("data/messages.json")
 
 with open(message_file, "r") as f:
@@ -153,6 +169,15 @@ while True:
     last_title = title
     last_message = message
 
+    if title == "PRIORITY":
+        EYES = "[O - O]"
+    elif title == "WARNING":
+        EYES = "[D - D]"
+    elif title == "FAMILY":
+        EYES = "[o O]"
+
+    MOOD = EYE_MOODS.get(EYES, "UNKNOWN")
+
     divider = "=" * DISPLAY_WIDTH
 
     current_time = datetime.now().strftime("%H:%M")
@@ -168,6 +193,7 @@ while True:
         "",
         EYES,
         BEEP,
+        f"MOOD: {MOOD}",
         "",
         'V-XN "VEX" ASTROMECH',
         "COMMAND NODE // LOCAL",
