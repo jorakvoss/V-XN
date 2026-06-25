@@ -145,7 +145,8 @@
     "Consulting ancient freezer wisdom...",
     "Scanning for feline interference...",
     "Calibrating droid attitude...",
-    "Preparing to judge operator choices..."
+    "Preparing to judge operator choices...",
+    "Initialization complete."
 ],
 
   "priority": [
@@ -185,6 +186,19 @@
     "Dwooo.",
     "Bee-deep.",
     "Woop-bweep."
+],
+
+  "subsystems": [
+    "SNARK EMITTER OK",
+    "CAT RADAR ARMED",
+    "COFFEE SENSOR QUESTIONABLE",
+    "CAMTONO EMPTY",
+    "MOTIVATOR STABLE",
+    "STATIC LEASE CONFIRMED",
+    "TEMU FILTER DEGRADED",
+    "GROGU OVERSIGHT ACTIVE",
+    "FREEZER RESPECT PROTOCOL ONLINE",
+    "OPNSENSE LINK TRUSTED"
 ],
 
 "display_titles": {

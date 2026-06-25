@@ -61,6 +61,7 @@ loading = data["loading"]
 beeps = data["beeps"]
 priority = data["priority"]
 family = data["family"]
+subsystems = data["subsystems"]
 
 DISPLAY_TITLES = data["display_titles"]
 
@@ -94,7 +95,10 @@ print("\033[?25l", end="", flush=True)
 
 def show_loading_screen():
     divider = "=" * DISPLAY_WIDTH
-    for loading_message in loading:
+    boot_messages = random.sample(loading[:-1], min(4, len(loading) - 1))
+    boot_messages.append(loading[-1])
+
+    for loading_message in boot_messages:
         clear_screen()
 
         eyes = random.choice(EYE_PATTERNS)
@@ -129,6 +133,7 @@ while True:
     clear_screen()
     EYES = random.choice(EYE_PATTERNS)
     BEEP = random.choice(beeps)
+    SUBSYSTEM = random.choice(subsystems)
 
     titles = [
     "STARTUP",
@@ -197,6 +202,7 @@ while True:
         "",
         'V-XN "VEX" ASTROMECH',
         "COMMAND NODE // LOCAL",
+        f"SUBSYSTEM: {SUBSYSTEM}",
         "",
         current_time,
         current_date,
