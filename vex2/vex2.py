@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 
 import glob
@@ -32,10 +31,10 @@ DATA_FILE = BASE.parent / "data/messages_m0_4.json"
 
 FONT_DIR = "/usr/share/fonts/truetype/dejavu/"
 TITLE_FONT = ImageFont.truetype(
-    FONT_DIR + "DejaVuSans-Bold.ttf", 20
+    FONT_DIR + "DejaVuSans-Bold.ttf", 22
 )
 SMALL_FONT = ImageFont.truetype(
-    FONT_DIR + "DejaVuSans.ttf", 14
+    FONT_DIR + "DejaVuSans-Bold.ttf", 14
 )
 
 # Overnight: midnight to 7 AM, Eastern
@@ -149,35 +148,57 @@ def draw_iris(d, cx, cy, radius, opening, color):
         )
 
 
-def fit_message(d, text):
-    for size in (15, 13, 11):
-        font = ImageFont.truetype(
-            FONT_DIR + "DejaVuSans.ttf", size
-        )
+# Cache fonts and layouts: the display redraws eight times per second.
+from functools import lru_cache
 
+
+@lru_cache(maxsize=32)
+def message_font(size):
+    return ImageFont.truetype(
+        FONT_DIR + "DejaVuSans-Bold.ttf", size
+    )
+
+
+@lru_cache(maxsize=256)
+def message_layout(text):
+    """Fit every word inside the console; never truncate a message."""
+    measure = ImageDraw.Draw(Image.new("RGB", (1, 1)))
+
+    def wrap(font):
         lines = []
         current = ""
-
-        for word in text.split():
+        for word in str(text).split():
             candidate = (current + " " + word).strip()
-            width = d.textbbox(
-                (0, 0), candidate, font=font
-            )[2]
-
-            if width <= 400:
+            if measure.textlength(candidate, font=font) <= 400:
                 current = candidate
-            else:
-                if current:
+                continue
+            if current:
+                lines.append(current)
+                current = ""
+            # Even an unusually long unbroken word must fit.
+            for char in word:
+                if measure.textlength(current + char, font=font) > 400:
                     lines.append(current)
-                current = word
-
+                    current = char
+                else:
+                    current += char
         if current:
             lines.append(current)
+        return lines or [""]
 
+    for size in (18, 17, 16):
+        font = message_font(size)
+        lines = wrap(font)
         if len(lines) <= 2:
-            return lines, font
+            break
+    pages = tuple(tuple(lines[i:i + 2]) for i in range(0, len(lines), 2))
+    return pages, size
 
-    return lines[:2], font
+
+def fit_message(d, text):
+    # Compatibility helper: callers needing every page use message_layout.
+    pages, size = message_layout(str(text))
+    return list(pages[0]), message_font(size)
 
 
 class Vex:
@@ -293,6 +314,13 @@ class Vex:
             self.next_message = (
                 t + random.uniform(12, 25)
             )
+
+            pages, _ = message_layout(str(self.message))
+            reading_seconds = sum(
+                max(3.0, len(" ".join(page).split()) * 0.4)
+                for page in pages
+            )
+            self.next_message = max(self.next_message, t + reading_seconds)
 
             print(
                 f"[{self.category}] {self.message}",
@@ -535,17 +563,35 @@ class Vex:
         d.text(
             (240,241), title,
             font=TITLE_FONT,
-            fill=AMBER,
+            fill="#FFFFFF",
             anchor="mt"
         )
 
-        lines, font = fit_message(d, message)
+        pages, size = message_layout(str(message))
+        font = message_font(size)
+        page_key = (title, message)
+        if getattr(self, "_page_key", None) != page_key:
+            self._page_key = page_key
+            self._page_started = t
 
+        # Give each page time to read. All source text is retained.
+        durations = [max(3.0, len(" ".join(page).split()) * 0.4)
+                     for page in pages]
+        phase = max(0.0, t - self._page_started) % sum(durations)
+        page_index = 0
+        for index, duration in enumerate(durations):
+            if phase < duration:
+                page_index = index
+                break
+            phase -= duration
+        lines = pages[page_index]
+        line_height = 21
+        top = 268 if len(lines) == 2 else 278
         for i, line in enumerate(lines):
             d.text(
-                (240,269+i*18), line,
+                (240, top + i * line_height), line,
                 font=font,
-                fill=CYAN,
+                fill="#F4FCFF",
                 anchor="mt"
             )
 
