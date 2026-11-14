@@ -6,6 +6,7 @@ import math
 import os
 import random
 import select
+import serial
 import struct
 import time
 from datetime import datetime
@@ -21,6 +22,13 @@ from vex2_display_astromech_approved import show
 
 W, H = 480, 320
 FRAME_DELAY = 0.125
+# ESP32 motion detector
+MOTION_PORT = "/dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0"
+MOTION_BAUD = 115200
+MOTION_DISPLAY_SECONDS = 8
+MOTION_COOLDOWN_SECONDS = 30  # Minimum time between accepted motion reactions
+MOTION_RETRY_SECONDS = 10
+MOTION_MAX_BUFFER = 4096
 
 RED = "#FF0000"
 AMBER = "#FFAA20"
@@ -227,6 +235,14 @@ class Vex:
         self.night_blank = False
         self.frames = 0
 
+        # ESP32 motion events are independent of touchscreen interactions.
+        self.motion_serial = None
+        self.motion_buffer = b""
+        self.motion_message = ""
+        self.motion_until = 0.0
+        self.motion_next_allowed = 0.0
+        self.motion_retry_at = 0.0
+
     def pick(self, category):
         options = self.messages.get(category, [])
         if isinstance(options, list) and options:
@@ -301,6 +317,78 @@ class Vex:
             ):
                 self.touch(t)
 
+    def connect_motion(self, t):
+        """Connect without preventing the rest of the HUD from starting."""
+        if self.motion_serial is not None or t < self.motion_retry_at:
+            return
+        self.motion_retry_at = t + MOTION_RETRY_SECONDS
+        try:
+            self.motion_serial = serial.Serial(
+                MOTION_PORT, MOTION_BAUD, timeout=0, write_timeout=0
+            )
+            self.motion_buffer = b""
+            print("VEX: ESP32 motion detector connected.", flush=True)
+        except (serial.SerialException, OSError) as exc:
+            self.motion_serial = None
+            print(f"VEX: Motion detector unavailable: {exc}", flush=True)
+
+    def read_motion(self, t):
+        """Poll serial input without ever blocking the animation loop."""
+        if self.motion_serial is None:
+            self.connect_motion(t)
+            return
+
+        try:
+            available = self.motion_serial.in_waiting
+            if not available:
+                return
+            data = self.motion_serial.read(min(available, MOTION_MAX_BUFFER))
+        except (serial.SerialException, OSError) as exc:
+            print(f"VEX: Motion detector disconnected: {exc}", flush=True)
+            try:
+                self.motion_serial.close()
+            except (serial.SerialException, OSError):
+                pass
+            self.motion_serial = None
+            self.motion_buffer = b""
+            self.motion_retry_at = t + MOTION_RETRY_SECONDS
+            return
+
+        self.motion_buffer += data
+        # Discard an oversized unterminated line (e.g., ESP32 boot noise).
+        if b"\n" not in self.motion_buffer and len(self.motion_buffer) > MOTION_MAX_BUFFER:
+            self.motion_buffer = b""
+            return
+
+        while b"\n" in self.motion_buffer:
+            line, self.motion_buffer = self.motion_buffer.split(b"\n", 1)
+            message = line.decode("utf-8", errors="replace").strip()
+            if not message.startswith("VEX:"):
+                continue
+            # Movement must never wake Vex during his midnight-7 AM standby.
+            if self.is_night():
+                continue
+            response = message[4:].strip()
+            if not response:
+                continue
+            # Read and discard excess events so USB input never backs up.
+            # The ESP32 keeps its own sarcasm cycle; only HUD reactions are throttled.
+            if t < self.motion_next_allowed:
+                continue
+            self.motion_next_allowed = t + MOTION_COOLDOWN_SECONDS
+            self.motion_message = response
+            self.motion_until = t + MOTION_DISPLAY_SECONDS
+            self.nap_started = None
+            self.nap_end = None
+            self.next_nap = t + random.uniform(*NAP_INTERVAL)
+            # Prevent a queued routine message from cutting the response short.
+            self.next_message = max(self.next_message, self.motion_until)
+            print(f"MOTION: {response}", flush=True)
+
+        # Avoid indefinite accumulation if noise follows the last newline.
+        if len(self.motion_buffer) > MOTION_MAX_BUFFER:
+            self.motion_buffer = b""
+
     def update(self, t, overnight):
         if overnight:
             return
@@ -374,6 +462,9 @@ class Vex:
 
         title = "VEX // " + self.category.upper()
         message = self.message
+        if t < self.motion_until:
+            title = "VEX // MOTION DETECTED"
+            message = self.motion_message
 
         left_open = right_open = 1.0
         left_x = round(7 * math.sin(t * 1.3))
@@ -603,6 +694,8 @@ class Vex:
             os.O_RDONLY | os.O_NONBLOCK
         )
 
+        self.connect_motion(time.monotonic() - self.start)
+
         print("VEX 2.0 ONLINE")
         print("Touchscreen:", self.device)
         print("Long naps: ENABLED")
@@ -613,6 +706,7 @@ class Vex:
         try:
             while True:
                 t = time.monotonic() - self.start
+                self.read_motion(t)
 
                 ready, _, _ = select.select(
                     [self.fd], [], [], 0
@@ -665,6 +759,11 @@ class Vex:
             print("\nShutdown requested.")
 
         finally:
+            if self.motion_serial is not None:
+                try:
+                    self.motion_serial.close()
+                except (serial.SerialException, OSError):
+                    pass
             if self.fd is not None:
                 os.close(self.fd)
 
