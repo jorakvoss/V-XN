@@ -16,6 +16,14 @@ from zoneinfo import ZoneInfo
 from PIL import Image, ImageDraw, ImageFont
 from vex2_display_astromech_approved import show
 
+# Home Assistant observations read only the local monitoring snapshot.
+from ha_awareness import (
+    load_status as ha_load_status,
+    monitor_changes as ha_monitor_changes,
+    get_pending_event as ha_get_pending_event,
+    get_observation as ha_get_observation,
+)
+
 # ------------------------------------------
 # VEX 2.0 - SLEEP AND OVERNIGHT STANDBY
 # ------------------------------------------
@@ -29,6 +37,12 @@ MOTION_DISPLAY_SECONDS = 8
 MOTION_COOLDOWN_SECONDS = 30  # Minimum time between accepted motion reactions
 MOTION_RETRY_SECONDS = 10
 MOTION_MAX_BUFFER = 4096
+
+# Home Assistant commentary should complement, not dominate, Vex's personality.
+HA_OBSERVATION_CHANCE = 0.15
+HA_COMMENT_COOLDOWN = 300  # At least five minutes between HA remarks.
+HA_CHANGE_CHECK_INTERVAL = 60
+HA_RECENT_LIMIT = 4
 
 RED = "#FF0000"
 AMBER = "#FFAA20"
@@ -243,6 +257,11 @@ class Vex:
         self.motion_next_allowed = 0.0
         self.motion_retry_at = 0.0
 
+        # HA state-change memory lives in ha_monitor/awareness_state.json.
+        self.ha_next_check = 0.0
+        self.ha_next_comment = 0.0
+        self.ha_recent = []
+
     def pick(self, category):
         options = self.messages.get(category, [])
         if isinstance(options, list) and options:
@@ -393,11 +412,42 @@ class Vex:
         if overnight:
             return
 
+        # Track state changes at most once per minute, even if Vex is napping.
+        # The monitor process separately refreshes status.json every minute.
+        if t >= self.ha_next_check:
+            self.ha_next_check = t + HA_CHANGE_CHECK_INTERVAL
+            try:
+                ha_monitor_changes()
+            except (OSError, ValueError, KeyError, TypeError) as exc:
+                print(f"VEX HA: Awareness check skipped: {exc}", flush=True)
+
         if t >= self.next_message:
-            self.category = random.choice(
-                ["status", "observations"]
-            )
-            self.message = self.pick(self.category)
+            category = random.choice(["status", "observations"])
+            message = self.pick(category)
+
+            # Motion reactions and naps take priority over HA commentary.
+            if (
+                t >= self.ha_next_comment
+                and t >= self.motion_until
+                and self.nap_started is None
+            ):
+                try:
+                    if ha_load_status() is not None:
+                        # Confirmed state transitions/reminders get first chance.
+                        ha_message = ha_get_pending_event()
+                        if ha_message is None and random.random() < HA_OBSERVATION_CHANCE:
+                            ha_message = ha_get_observation(recent=self.ha_recent)
+                        if ha_message:
+                            category = "ship computer"
+                            message = ha_message
+                            self.ha_next_comment = t + HA_COMMENT_COOLDOWN
+                            self.ha_recent.append(ha_message)
+                            self.ha_recent = self.ha_recent[-HA_RECENT_LIMIT:]
+                except (OSError, ValueError, KeyError, TypeError) as exc:
+                    print(f"VEX HA: Observation skipped: {exc}", flush=True)
+
+            self.category = category
+            self.message = message
 
             self.next_message = (
                 t + random.uniform(12, 25)

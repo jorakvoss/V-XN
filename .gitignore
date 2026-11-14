@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Vex Home Assistant monitoring
+vex2/ha_monitor/*.json
+vex2/ha_monitor/*.log
+vex2/ha_monitor/*token*
+vex2/ha_monitor/*secret*
